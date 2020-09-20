@@ -1,0 +1,62 @@
+diff -Nur ./components/esp32/panic.c /home/ubuntu/esp-idf-v3.3.3/components/esp32/panic.c
+--- ./components/esp32/panic.c	2020-09-18 05:31:44.355453697 -0700
++++ /home/ubuntu/esp-idf-v3.3.3/components/esp32/panic.c	2020-09-18 05:33:05.088045215 -0700
+@@ -326,6 +326,29 @@
+     commonErrorHandler(frame);
+ }
+ 
++void xt_intdivbyzero_exception(XtExcFrame *frame, unsigned long a3, unsigned long a4)
++{
++    //panicPutStr("[DEBUG] IntegerDivideByZero\n");
++
++    unsigned long instdata, srcreg, dstreg;
++    unsigned char regbyte;
++    __asm__ ("l32i %0, %1, 0" : "=r"(instdata) : "r"(frame->pc & 0xfffffffc));
++    regbyte = (instdata >> (((frame->pc & 0x3) + 1) * 8)) & 0xff;
++    srcreg = regbyte & 0x0f;
++    dstreg = regbyte >> 4;
++
++    //panicPutStr("[DEBUG] srcreg = ");
++    //panicPutHex(srcreg);
++    //panicPutStr(", dstreg = ");
++    //panicPutHex(dstreg);
++    //panicPutStr("\n");
++
++    ((unsigned long *)(&frame->a0))[dstreg] = ((unsigned long *)(&frame->a0))[srcreg] * ((unsigned long *)(&frame->a0))[srcreg];
++    frame->pc += 3;
++
++    return;
++}
++
+ void xt_unhandled_exception(XtExcFrame *frame)
+ {
+     haltOtherCore();
+diff -Nur ./components/freertos/xtensa_intr_asm.S /home/ubuntu/esp-idf-v3.3.3/components/freertos/xtensa_intr_asm.S
+--- ./components/freertos/xtensa_intr_asm.S	2020-09-18 05:31:44.355453697 -0700
++++ /home/ubuntu/esp-idf-v3.3.3/components/freertos/xtensa_intr_asm.S	2020-09-16 21:29:26.921595961 -0700
+@@ -115,8 +115,23 @@
+     .align  4
+ 
+ _xt_exception_table:
+-    .rept   XCHAL_EXCCAUSE_NUM * portNUM_PROCESSORS
+-    .word   xt_unhandled_exception    /* handler address */
++    //.rept   XCHAL_EXCCAUSE_NUM * portNUM_PROCESSORS
++    //.word   xt_unhandled_exception    /* handler address */
++    //.endr
++    .rept   6
++        .rept portNUM_PROCESSORS
++        .word   xt_unhandled_exception    /* handler address */
++        .endr
++    .endr
++
++    .rept portNUM_PROCESSORS
++    .word   xt_intdivbyzero_exception
++    .endr
++
++    .rept   XCHAL_EXCCAUSE_NUM - 7
++        .rept portNUM_PROCESSORS
++        .word   xt_unhandled_exception    /* handler address */
++        .endr
+     .endr
+ 
+ #endif

@@ -1,0 +1,10 @@
+flag     : 396e6952 546f576f 72656240 6f396e75
+f2table  : eeec09dc 03774ed1 0c443fff 9fa8fc57
+fake     : 856ff725 40b474ce 95f4e19d 8f1b633d
+real     : 5935f1de b63725e7 dfa10069 4e556f64
+Calculating flag with real hashfunc......
+flag     : 396e6952 546f576f 72656240 6f396e75
+Calculating another flag with real hashfunc......
+No flags found.
+Calculating flag with fake hashfunc......
+No flags found.
