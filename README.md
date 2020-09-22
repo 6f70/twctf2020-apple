@@ -1,8 +1,8 @@
 # apple
 
-## What is it?
+## What is this?
 
-Reverse engineering challenge released in TokyoWesterns CTF 6th 2020
+A reverse engineering challenge released in TokyoWesterns CTF 6th 2020
 
 ## Challenge description
 
@@ -10,7 +10,7 @@ Reverse engineering challenge released in TokyoWesterns CTF 6th 2020
 
 Attachment: [apple.tar.gz](apple.tar.gz)
 
-## Additional note
+## Additional notes
 
 The following clarification and hint had been published 19h42m after this challenge opened in the CTF.
 Decode it as base64 to read its content.
@@ -40,4 +40,4 @@ Files for public release ( = apple.tar.gz )
 
 ### intended_solution/
 
-**[Spoiler Warning]** Files of intended solution
+**[Spoiler Warning]** Files for intended solution
